@@ -1,21 +1,12 @@
-/* eslint-disable react-native/no-inline-styles */
 // src/AppNavigator.tsx
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { View, Text } from 'react-native';
 import LoginScreen from './auth/LoginScreen';
 import SignupScreen from './auth/SignupScreen';
+import MainScreen from './pages/MainScreen';
 import { RootStackParamList } from './utility/navigation';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
-
-function MainScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Welcome to Main Screen 🎉</Text>
-    </View>
-  );
-}
 
 export default function AppNavigator() {
   return (

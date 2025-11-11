@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Text, TextInput, Button, Snackbar } from 'react-native-paper';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { API_URL } from '../utility/constant';
 
@@ -42,6 +42,9 @@ export default function LoginScreen({ navigation }: Props) {
           if (!response.ok) {
             throw new Error(`Server responded ${response.status}`);
           }
+          const data = await response.json();
+          console.log(data)
+           await AsyncStorage.setItem('user_name', data.name);
           navigation.navigate('Main');
         } catch (error) {
           console.log('Error:', error);
