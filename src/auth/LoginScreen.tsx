@@ -43,7 +43,6 @@ export default function LoginScreen({ navigation }: Props) {
             throw new Error(`Server responded ${response.status}`);
           }
           const data = await response.json();
-          console.log(data)
            await AsyncStorage.setItem('user_name', data.name);
           navigation.navigate('Main');
         } catch (error) {
