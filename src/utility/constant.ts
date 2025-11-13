@@ -1,4 +1,4 @@
-export const API_URL:string = "http://10.207.100.153:8080/api"
+export const API_URL:string = "https://eye-doc-api.onrender.com/api"
 
 export const pdfImages = [
   require('../assets/pdf_images/page_1.png'),

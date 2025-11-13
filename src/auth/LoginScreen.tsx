@@ -31,30 +31,35 @@ export default function LoginScreen({ navigation }: Props) {
     // const savedPassword = await AsyncStorage.getItem('user_password');
 
     try {
-          const response = await fetch(API_URL+'/auth/login', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({  email, password }),
-          });
-    
-          if (!response.ok) {
-            throw new Error(`Server responded ${response.status}`);
-          }
-          const data = await response.json();
-           await AsyncStorage.setItem('user_name', data.name);
-           await AsyncStorage.setItem('user_id', data._id);
-          navigation.navigate('Main');
-        } catch (error) {
-          console.log('Error:', error);
-          setSnackVisible(true);
-        }
+      const response = await fetch(API_URL + '/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Server responded ${response.status}`);
+      }
+      const data = await response.json();
+      await AsyncStorage.setItem('user_name', data.name);
+      await AsyncStorage.setItem('user_id', data._id);
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Main' }],
+      });
+    } catch (error) {
+      console.log('Error:', error);
+      setSnackVisible(true);
+    }
   };
 
   return (
     <View style={styles.container}>
-      <Text variant="headlineMedium" style={styles.title}>Login</Text>
+      <Text variant="headlineMedium" style={styles.title}>
+        Login
+      </Text>
       <TextInput
         label="Email"
         value={email}
@@ -89,7 +94,12 @@ export default function LoginScreen({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  },
   title: { marginBottom: 20 },
   input: { width: '90%', marginBottom: 12 },
   button: { width: '90%', marginTop: 12 },

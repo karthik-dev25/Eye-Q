@@ -23,15 +23,14 @@ export default function MainScreen({ navigation }: Props) {
 
   // ✅ Test buttons (same as in Kivy)
   const tests = [
-  { name: 'Distance Vision Test', route: 'DistanceVision' },
-  { name: 'Near Vision Test', route: 'NearVision' },
-  { name: 'Color Vision Test', route: 'ColorVisionTest' },
-  { name: 'Contrast Sensitivity Test', route: 'ContrastTest' },
-  { name: 'Amsler Grid Test', route: 'AmslerTest' },
-  { name: 'Stereopsis Test', route: 'StereopsisTest' },
-  { name: 'Scores', route: 'TestScores' },
-];
-
+    { name: 'Distance Vision Test', route: 'DistanceVision' },
+    { name: 'Near Vision Test', route: 'NearVision' },
+    { name: 'Color Vision Test', route: 'ColorVisionTest' },
+    { name: 'Contrast Sensitivity Test', route: 'ContrastTest' },
+    { name: 'Amsler Grid Test', route: 'AmslerTest' },
+    { name: 'Stereopsis Test', route: 'StereopsisTest' },
+    { name: 'Scores', route: 'TestScores' },
+  ];
 
   const handleNavigate = (route: string) => {
     navigation.navigate(route as never);
@@ -59,7 +58,7 @@ export default function MainScreen({ navigation }: Props) {
         <Text style={styles.sectionTitle}>Vision Tests</Text>
 
         <View style={styles.buttonsLayout}>
-          {tests.map((test) => (
+          {tests.map(test => (
             <Button
               key={test.name}
               mode="contained"
