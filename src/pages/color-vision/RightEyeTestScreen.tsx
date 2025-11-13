@@ -5,8 +5,8 @@ import { Text, TextInput, Button, Dialog, Portal, Provider } from 'react-native-
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../utility/navigation';
-import { pdfImages } from '../utility/constant';
+import { API_URL, pdfImages } from '../../utility/constant';
+import { RootStackParamList } from '../../utility/navigation';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'RightEyeTest'>;
 
@@ -88,12 +88,14 @@ export default function RightEyeTestScreen({ navigation }: Props) {
 
     // persist to backend (best-effort)
     try {
-      const email = await AsyncStorage.getItem('user_email');
-      if (email) {
-        await axios.post('http://10.0.2.2:8080/api/tests/colorvision/right', {
-          email,
-          right_eye_score: usedScore,
-          right_eye_remark: remark,
+      const userId = await AsyncStorage.getItem('user_id');
+      if (userId) {
+        await axios.post(API_URL + '/testscore', {
+          userId,
+          testName: 'Right Eye Color Vision',
+          testTotalScore: 17,
+          testScore: finalScore,
+          remark: remark,
         });
       }
     } catch (err: any) {

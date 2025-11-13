@@ -29,7 +29,7 @@ export default function MainScreen({ navigation }: Props) {
   { name: 'Contrast Sensitivity Test', route: 'ContrastTest' },
   { name: 'Amsler Grid Test', route: 'AmslerTest' },
   { name: 'Stereopsis Test', route: 'StereopsisTest' },
-  { name: 'Scores', route: 'Scores' },
+  { name: 'Scores', route: 'TestScores' },
 ];
 
 

@@ -11,4 +11,5 @@ export type RootStackParamList = {
   ContrastTest?: undefined;
   AmslerTest?: undefined;
   StereopsisTest?: undefined;
+  TestScores: undefined;
 };

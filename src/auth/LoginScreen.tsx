@@ -44,6 +44,7 @@ export default function LoginScreen({ navigation }: Props) {
           }
           const data = await response.json();
            await AsyncStorage.setItem('user_name', data.name);
+           await AsyncStorage.setItem('user_id', data._id);
           navigation.navigate('Main');
         } catch (error) {
           console.log('Error:', error);
