@@ -9,6 +9,7 @@ import ColorVisionTestScreen from "./pages/color-vision/ColorVisionTestScreen";
 import RightEyeTestScreen from "./pages/color-vision/RightEyeTestScreen";
 import LeftEyeTestScreen from "./pages/color-vision/LeftEyeTestScreen";
 import TestScoresScreen from "./pages/scores/TestScoresScreen";
+import StereopsisTestScreen from "./pages/stereopsis/StereopsisTestScreen";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -28,6 +29,8 @@ export default function App() {
         {/* Navigate tests in replace mode */}
         <Stack.Screen name="RightEyeTest" component={RightEyeTestScreen} />
         <Stack.Screen name="LeftEyeTest" component={LeftEyeTestScreen} />
+        
+        <Stack.Screen name="StereopsisTest" component={StereopsisTestScreen} />
 
         <Stack.Screen name="TestScores" component={TestScoresScreen} />
       </Stack.Navigator>

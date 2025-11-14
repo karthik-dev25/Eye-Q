@@ -1,11 +1,11 @@
 /* eslint-disable react-native/no-inline-styles */
 // src/screens/TestScoresScreen.tsx
-import React, { useEffect, useState, useCallback } from "react";
-import { View, StyleSheet, FlatList, RefreshControl } from "react-native";
-import { Text, Card, ActivityIndicator } from "react-native-paper";
-import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { API_URL } from "../../utility/constant";
+import React, { useEffect, useState, useCallback } from 'react';
+import { View, StyleSheet, FlatList, RefreshControl } from 'react-native';
+import { Text, Card, ActivityIndicator } from 'react-native-paper';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API_URL } from '../../utility/constant';
 
 interface TestScore {
   _id: string;
@@ -13,6 +13,7 @@ interface TestScore {
   testName: string;
   testTotalScore: number;
   testScore: number;
+  remark:string;
   createdAt: string;
 }
 
@@ -20,16 +21,16 @@ export default function TestScoresScreen() {
   const [scores, setScores] = useState<TestScore[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const [errorMsg, setErrorMsg] = useState<string>("");
+  const [errorMsg, setErrorMsg] = useState<string>('');
 
   const fetchScores = async () => {
     try {
       setLoading(true);
-      setErrorMsg("");
+      setErrorMsg('');
 
-      const userId = await AsyncStorage.getItem("user_id");
+      const userId = await AsyncStorage.getItem('user_id');
       if (!userId) {
-        setErrorMsg("No user ID found.");
+        setErrorMsg('No user ID found.');
         setLoading(false);
         return;
       }
@@ -39,7 +40,7 @@ export default function TestScoresScreen() {
       setScores(res.data.scores || []);
       setLoading(false);
     } catch (error: any) {
-      setErrorMsg(error?.message || "Error fetching scores");
+      setErrorMsg(error?.message || 'Error fetching scores');
       setLoading(false);
     }
   };
@@ -55,7 +56,7 @@ export default function TestScoresScreen() {
 
   const formatDate = (dateString: string) => {
     const d = new Date(dateString);
-    return d.toLocaleDateString() + " " + d.toLocaleTimeString();
+    return d.toLocaleDateString() + ' ' + d.toLocaleTimeString();
   };
 
   const renderItem = ({ item }: { item: TestScore }) => (
@@ -66,8 +67,12 @@ export default function TestScoresScreen() {
         <Text style={styles.score}>
           Score: {item.testScore} / {item.testTotalScore}
         </Text>
-
-        <Text style={styles.date}>Last Taken on: {formatDate(item.createdAt)}</Text>
+        <Text style={styles.score}>
+          Remark: {item.remark}
+        </Text>
+        <Text style={styles.date}>
+          Last Taken on: {formatDate(item.createdAt)}
+        </Text>
       </Card.Content>
     </Card>
   );
@@ -84,7 +89,7 @@ export default function TestScoresScreen() {
   if (errorMsg) {
     return (
       <View style={styles.center}>
-        <Text style={{ color: "red" }}>{errorMsg}</Text>
+        <Text style={{ color: 'red' }}>{errorMsg}</Text>
       </View>
     );
   }
@@ -95,7 +100,7 @@ export default function TestScoresScreen() {
 
       <FlatList
         data={scores}
-        keyExtractor={(item) => item._id}
+        keyExtractor={item => item._id}
         renderItem={renderItem}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -111,45 +116,45 @@ export default function TestScoresScreen() {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-    backgroundColor: "#f2f2f2",
+    backgroundColor: '#f2f2f2',
     flex: 1,
   },
   header: {
     fontSize: 22,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 14,
-    textAlign: "center",
+    textAlign: 'center',
   },
   card: {
     marginVertical: 6,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     borderRadius: 12,
     padding: 10,
     elevation: 3,
   },
   testName: {
     fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 6,
   },
   score: {
     fontSize: 16,
     marginBottom: 4,
-    color: "#333",
+    color: '#333',
   },
   date: {
     fontSize: 14,
-    color: "gray",
+    color: 'gray',
   },
   center: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   empty: {
-    textAlign: "center",
+    textAlign: 'center',
     marginTop: 20,
     fontSize: 16,
-    color: "gray",
+    color: 'gray',
   },
 });
