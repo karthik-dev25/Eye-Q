@@ -6,7 +6,6 @@ export type RootStackParamList = {
   RightEyeTest: undefined;
   LeftEyeTest: undefined;
   Scores?: undefined;
-  AmslerTest?: undefined;
   StereopsisTest?: undefined;
   TestScores: undefined;
 
@@ -33,6 +32,10 @@ export type RootStackParamList = {
   ContrastSensitivityMenu: undefined;
   RightEyeContrast: undefined;
   LeftEyeContrast: undefined;
+
+  AmslerGridTest: undefined;
+  RightEyeAmsler: undefined;
+  LeftEyeAmsler: undefined;
 
   NearVisionMenu?: undefined;
   NearVisionRight: { language: string } | undefined;

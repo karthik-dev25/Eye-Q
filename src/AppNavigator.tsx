@@ -21,6 +21,9 @@ import DVTestTypeSelect from "./pages/distance-vision/DVTestTypeSelect";
 import RightEyeDV from "./pages/distance-vision/RightEyeDV";
 import LeftEyeDV from "./pages/distance-vision/LeftEyeDV";
 import DVResults from "./pages/distance-vision/DVResults";
+import AmslerGridTestScreen from "./pages/amsler/AmslerGridTestScreen";
+import RightEyeAmslerScreen from "./pages/amsler/RightEyeAmslerScreen";
+import LeftEyeAmslerScreen from "./pages/amsler/LeftEyeAmslerScreen";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -58,6 +61,12 @@ export default function App() {
         {/* Navigate tests in replace mode */}
         <Stack.Screen name="RightEyeTest" component={RightEyeTestScreen} />
         <Stack.Screen name="LeftEyeTest" component={LeftEyeTestScreen} />
+
+        {/* Amsler */}
+        <Stack.Screen name="AmslerGridTest" component={AmslerGridTestScreen} />
+        <Stack.Screen name="RightEyeAmsler" component={RightEyeAmslerScreen} />
+        <Stack.Screen name="LeftEyeAmsler" component={LeftEyeAmslerScreen} />
+
         
         <Stack.Screen name="StereopsisTest" component={StereopsisTestScreen} />
 

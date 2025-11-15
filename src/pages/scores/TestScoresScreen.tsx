@@ -14,7 +14,7 @@ interface TestScore {
   testTotalScore: number;
   testScore: number;
   remark:string;
-  createdAt: string;
+  updatedAt: string;
 }
 
 export default function TestScoresScreen() {
@@ -71,7 +71,7 @@ export default function TestScoresScreen() {
           Remark: {item.remark}
         </Text>
         <Text style={styles.date}>
-          Last Taken on: {formatDate(item.createdAt)}
+          Last Taken on: {formatDate(item.updatedAt)}
         </Text>
       </Card.Content>
     </Card>
