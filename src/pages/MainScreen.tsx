@@ -24,7 +24,7 @@ export default function MainScreen({ navigation }: Props) {
   // ✅ Test buttons (same as in Kivy)
   const tests = [
     { name: 'Distance Vision Test', route: 'DistanceVision' },
-    { name: 'Near Vision Test', route: 'NearVision' },
+    { name: 'Near Vision Test', route: 'NearVisionMenu' },
     { name: 'Color Vision Test', route: 'ColorVisionTest' },
     { name: 'Contrast Sensitivity Test', route: 'ContrastTest' },
     { name: 'Amsler Grid Test', route: 'AmslerTest' },
