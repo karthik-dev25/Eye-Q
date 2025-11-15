@@ -57,12 +57,24 @@ export const nvImages = {
 };
 
 
-export const shuffleArray = (arr: string[]) => {
-  let array = [...arr];
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
-};
+// src/utility/constant.ts (append)
+export const contrastImages = [
+  require("../assets/contrast_images/page_1.png"),
+  require("../assets/contrast_images/page_2.png"),
+  require("../assets/contrast_images/page_3.png"),
+  require("../assets/contrast_images/page_4.png"),
+  require("../assets/contrast_images/page_5.png"),
+  require("../assets/contrast_images/page_6.png"),
+  require("../assets/contrast_images/page_7.png"),
+  require("../assets/contrast_images/page_8.png"),
+  require("../assets/contrast_images/page_9.png"),
+  require("../assets/contrast_images/page_10.png"),
+  require("../assets/contrast_images/page_11.png"),
+  require("../assets/contrast_images/page_12.png"),
+  require("../assets/contrast_images/page_13.png"),
+  require("../assets/contrast_images/page_14.png"),
+  require("../assets/contrast_images/page_15.png"),
+  require("../assets/contrast_images/page_16.png"),
+];
+
 

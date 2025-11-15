@@ -7,10 +7,13 @@ export type RootStackParamList = {
   LeftEyeTest: undefined;
   Scores?: undefined;
   DistanceVision?: undefined;
-  ContrastTest?: undefined;
   AmslerTest?: undefined;
   StereopsisTest?: undefined;
   TestScores: undefined;
+
+  ContrastSensitivityMenu: undefined;
+  RightEyeContrast: undefined;
+  LeftEyeContrast: undefined;
 
   NearVisionMenu?: undefined;
   NearVisionRight: { language: string } | undefined;

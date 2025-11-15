@@ -13,6 +13,9 @@ import StereopsisTestScreen from "./pages/stereopsis/StereopsisTestScreen";
 import NearVisionMenuScreen from "./pages/nearvision/NearVisionMenuScreen";
 import NearVisionRightScreen from "./pages/nearvision/NearVisionRightScreen";
 import NearVisionLeftScreen from "./pages/nearvision/NearVisionLeftScreen";
+import ContrastSensitivityMenuScreen from "./pages/contrastSensitivity/ContrastSensitivityMenuScreen";
+import RightEyeContrastScreen from "./pages/contrastSensitivity/RightEyeContrastScreen";
+import LeftEyeContrastScreen from "./pages/contrastSensitivity/LeftEyeContrastScreen";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -31,6 +34,11 @@ export default function App() {
          <Stack.Screen name="NearVisionMenu" component={NearVisionMenuScreen} />
         <Stack.Screen name="NearVisionRight" component={NearVisionRightScreen} />
         <Stack.Screen name="NearVisionLeft" component={NearVisionLeftScreen} />
+
+        {/* Contrast Menu */}
+        <Stack.Screen name="ContrastSensitivityMenu" component={ContrastSensitivityMenuScreen} />
+        <Stack.Screen name="RightEyeContrast" component={RightEyeContrastScreen} />
+        <Stack.Screen name="LeftEyeContrast" component={LeftEyeContrastScreen} />
 
         <Stack.Screen name="ColorVisionTest" component={ColorVisionTestScreen} />
 

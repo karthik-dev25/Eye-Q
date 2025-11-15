@@ -26,7 +26,7 @@ export default function MainScreen({ navigation }: Props) {
     { name: 'Distance Vision Test', route: 'DistanceVision' },
     { name: 'Near Vision Test', route: 'NearVisionMenu' },
     { name: 'Color Vision Test', route: 'ColorVisionTest' },
-    { name: 'Contrast Sensitivity Test', route: 'ContrastTest' },
+    { name: 'Contrast Sensitivity Test', route: 'ContrastSensitivityMenu' },
     { name: 'Amsler Grid Test', route: 'AmslerTest' },
     { name: 'Stereopsis Test', route: 'StereopsisTest' },
     { name: 'Scores', route: 'TestScores' },
