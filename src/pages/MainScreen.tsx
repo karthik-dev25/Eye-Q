@@ -38,7 +38,7 @@ export default function MainScreen({ navigation }: Props) {
 
   const handleLogout = async () => {
     await AsyncStorage.clear();
-    navigation.navigate('Login');
+    navigation.replace('Login');
   };
 
   return (
