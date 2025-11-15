@@ -48,7 +48,6 @@ const SyllablePools: Record<string, string[]> = {
   Hindi: [
     'भा',
     'आ',
-    'द',
     'ने',
     'पू',
     'जा',
