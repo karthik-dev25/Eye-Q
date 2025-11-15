@@ -77,4 +77,11 @@ export const contrastImages = [
   require("../assets/contrast_images/page_16.png"),
 ];
 
+export const TumblingE = {
+  0: require("../assets/tumbling/tumbling_e_0.png"),
+  90: require("../assets/tumbling/tumbling_e_90.png"),
+  180: require("../assets/tumbling/tumbling_e_180.png"),
+  270: require("../assets/tumbling/tumbling_e_270.png"),
+};
+
 

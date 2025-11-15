@@ -16,6 +16,11 @@ import NearVisionLeftScreen from "./pages/nearvision/NearVisionLeftScreen";
 import ContrastSensitivityMenuScreen from "./pages/contrastSensitivity/ContrastSensitivityMenuScreen";
 import RightEyeContrastScreen from "./pages/contrastSensitivity/RightEyeContrastScreen";
 import LeftEyeContrastScreen from "./pages/contrastSensitivity/LeftEyeContrastScreen";
+import DistanceVisionTestScreen from "./pages/distance-vision/DistanceVisionTestScreen";
+import DVTestTypeSelect from "./pages/distance-vision/DVTestTypeSelect";
+import RightEyeDV from "./pages/distance-vision/RightEyeDV";
+import LeftEyeDV from "./pages/distance-vision/LeftEyeDV";
+import DVResults from "./pages/distance-vision/DVResults";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -29,6 +34,14 @@ export default function App() {
 
         {/* After login, user cannot go back */}
         <Stack.Screen name="Main" component={MainScreen} />
+
+        {/* Distance Vision */}
+        <Stack.Screen name="DistanceVisionTest" component={DistanceVisionTestScreen} />
+        <Stack.Screen name="DVTestTypeSelect" component={DVTestTypeSelect} />
+        <Stack.Screen name="RightEyeDV" component={RightEyeDV} />
+        <Stack.Screen name="LeftEyeDV" component={LeftEyeDV} />
+        <Stack.Screen name="DVResults" component={DVResults} />
+
 
         {/** Near Vision Screens */}
          <Stack.Screen name="NearVisionMenu" component={NearVisionMenuScreen} />

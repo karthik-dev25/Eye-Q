@@ -6,10 +6,29 @@ export type RootStackParamList = {
   RightEyeTest: undefined;
   LeftEyeTest: undefined;
   Scores?: undefined;
-  DistanceVision?: undefined;
   AmslerTest?: undefined;
   StereopsisTest?: undefined;
   TestScores: undefined;
+
+  DistanceVisionTest?: undefined;
+  DVTestTypeSelect: {
+    onSelect: (testName: string) => void;
+  };
+
+  RightEyeDV: {
+    testType: string;
+  };
+
+  LeftEyeDV: {
+    testType: string;
+  };
+
+  DVResults: {
+    lastCorrect: number;
+    eye: string;
+    testType: string;
+  };
+  
 
   ContrastSensitivityMenu: undefined;
   RightEyeContrast: undefined;
