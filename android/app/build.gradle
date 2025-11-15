@@ -95,6 +95,15 @@ android {
             keyPassword 'android'
         }
     }
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            def appName = "EyeQ"
+            def buildType = variant.buildType.name
+            def versionName = variant.versionName
+
+            outputFileName = "${appName}-${versionName}-${buildType}.apk"
+        }
+    }
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
