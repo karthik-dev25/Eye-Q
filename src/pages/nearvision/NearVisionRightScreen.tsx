@@ -216,17 +216,6 @@ export default function NearVisionRightScreen({ navigation, route }: Props) {
   return (
     <Provider>
       <ScrollView contentContainerStyle={styles.container}>
-        <Button
-          onPress={() =>
-            navigation.reset({
-              index: 0,
-              routes: [{ name: 'NearVisionMenu' }],
-            })
-          }
-        >
-          ← Back
-        </Button>
-
         <Text style={styles.title}>Near Vision — Right Eye ({language})</Text>
 
         <Card style={styles.card}>

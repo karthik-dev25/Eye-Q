@@ -59,18 +59,6 @@ export default function NearVisionMenuScreen({ navigation }: Props) {
           </Button>
         </Card.Actions>
       </Card>
-
-      <Button
-        style={{ marginTop: 20 }}
-        onPress={() =>
-          navigation.reset({
-            index: 0,
-            routes: [{ name: "Main" }],
-          })
-        }
-      >
-        Back to Home
-      </Button>
     </View>
   );
 }
