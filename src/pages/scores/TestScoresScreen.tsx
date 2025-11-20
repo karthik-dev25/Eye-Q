@@ -13,9 +13,18 @@ interface TestScore {
   testName: string;
   testTotalScore: number;
   testScore: number;
-  remark:string;
+  remark: string;
   updatedAt: string;
 }
+
+const NotAllowed = [
+  'Left Eye Distance Vision Tumbling E',
+  'Right Eye Distance Vision Tumbling E',
+  'Left Eye Distance Vision Sloan Letters',
+  'Right Eye Distance Vision Sloan Letters',
+  'Left Eye Distance Vision Numbers',
+  'Right Eye Distance Vision Numbers',
+];
 
 export default function TestScoresScreen() {
   const [scores, setScores] = useState<TestScore[]>([]);
@@ -64,12 +73,14 @@ export default function TestScoresScreen() {
       <Card.Content>
         <Text style={styles.testName}>{item.testName}</Text>
 
-        <Text style={styles.score}>
-          Score: {item.testScore} / {item.testTotalScore}
-        </Text>
-        <Text style={styles.score}>
-          Remark: {item.remark}
-        </Text>
+        {!NotAllowed.includes(item.testName) ? (
+          <Text style={styles.score}>
+            Score: {item.testScore} / {item.testTotalScore}
+          </Text>
+        ) : (
+          <Text style={styles.score}>Score: {item.testScore}</Text>
+        )}
+        <Text style={styles.score}>Remark: {item.remark}</Text>
         <Text style={styles.date}>
           Last Taken on: {formatDate(item.updatedAt)}
         </Text>
