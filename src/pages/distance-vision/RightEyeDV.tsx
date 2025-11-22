@@ -1,64 +1,24 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
-import React, { useEffect, useState } from "react";
-import { View, StyleSheet } from "react-native";
-import { Text, Button, Portal, Dialog } from "react-native-paper";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../../utility/navigation";
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet } from 'react-native';
+import { Text, Button, Portal, Dialog } from 'react-native-paper';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../utility/navigation';
+import TumblingEView from './TumblingView';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'RightEyeDV'>;
 
-const SLOAN = ["C", "D", "H", "K", "N", "O", "R", "S", "V", "Z"];
-const DIGITS = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+const SLOAN = ['C', 'D', 'H', 'K', 'N', 'O', 'R', 'S', 'V', 'Z'];
+const DIGITS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
 // FIXED medically-valid Tumbling-E pattern
-const TUMBLING_E_LEVELS = [
-  [{ letter: "E", rotate: "270deg" }],
-  [
-    { letter: "E", rotate: "180deg" },
-    { letter: "E", rotate: "90deg" },
-  ],
-  [
-    { letter: "E", rotate: "270deg" },
-    { letter: "E", rotate: "0deg" },
-    { letter: "E", rotate: "180deg" },
-  ],
-  [
-    { letter: "E", rotate: "270deg" },
-    { letter: "E", rotate: "180deg" },
-    { letter: "E", rotate: "0deg" },
-    { letter: "E", rotate: "270deg" },
-  ],
-  [
-    { letter: "E", rotate: "180deg" },
-    { letter: "E", rotate: "270deg" },
-    { letter: "E", rotate: "0deg" },
-    { letter: "E", rotate: "270deg" },
-    { letter: "E", rotate: "90deg" },
-  ],
-  [
-    { letter: "E", rotate: "180deg" },
-    { letter: "E", rotate: "270deg" },
-    { letter: "E", rotate: "0deg" },
-    { letter: "E", rotate: "270deg" },
-    { letter: "E", rotate: "270deg" },
-    { letter: "E", rotate: "0deg" },
-  ],
-  [
-    { letter: "E", rotate: "180deg" },
-    { letter: "E", rotate: "0deg" },
-    { letter: "E", rotate: "270deg" },
-    { letter: "E", rotate: "270deg" },
-    { letter: "E", rotate: "90deg" },
-    { letter: "E", rotate: "0deg" },
-    { letter: "E", rotate: "90deg" },
-  ],
-];
 
-export default function LeftEyeDV({ route, navigation }: Props) {
+export default function RightEyeDV({ route, navigation }: Props) {
   const testType = route.params.testType;
 
   const fontSizes = [110, 66, 44, 33, 22, 17, 11];
+  const tumbfontSizes = [130, 86, 64, 53, 42, 37, 31];
   const counts = [1, 2, 3, 4, 5, 6, 7];
 
   const [level, setLevel] = useState(0);
@@ -76,15 +36,15 @@ export default function LeftEyeDV({ route, navigation }: Props) {
   const generateRow = () => {
     const count = counts[level];
 
-    if (testType === "Sloan Letters") {
+    if (testType === 'Sloan Letters') {
       setGenerated(shuffle(pickRandom(SLOAN, count)));
-    } else if (testType === "Numbers") {
+    } else if (testType === 'Numbers') {
       setGenerated(shuffle(pickRandom(DIGITS, count)));
     }
   };
 
   useEffect(() => {
-    if (testType !== "Tumbling E") generateRow();
+    if (testType !== 'Tumbling E') generateRow();
   }, [level]);
 
   const onCorrect = () => {
@@ -114,35 +74,23 @@ export default function LeftEyeDV({ route, navigation }: Props) {
 
       <View style={styles.row}>
         {/* Sloan + Numbers */}
-        {testType !== "Tumbling E" && (
+        {testType !== 'Tumbling E' && (
           <Text
             style={{
               fontSize: fontSizes[level],
-              textAlign: "center",
-              fontWeight: "900",
-              fontFamily: "Sloan",
+              textAlign: 'center',
+              fontWeight: '900',
+              fontFamily: 'Sloan',
             }}
           >
-            {generated.join("  ")}
+            {generated.join('  ')}
           </Text>
         )}
 
         {/* Tumbling E (rotated E font) */}
-        {testType === "Tumbling E" &&
-          TUMBLING_E_LEVELS[level].map((item, idx) => (
-            <Text
-              key={idx}
-              style={{
-                fontSize: fontSizes[level],
-                marginHorizontal: 6,
-                transform: [{ rotate: item.rotate }],
-                fontWeight: "bold",
-                fontFamily: "Sloan",
-              }}
-            >
-              {item.letter}
-            </Text>
-          ))}
+        {testType === 'Tumbling E' && (
+          <TumblingEView level={level} fontSize={tumbfontSizes[level]} />
+        )}
       </View>
 
       <Button mode="contained" onPress={onCorrect} style={styles.btn}>
@@ -178,9 +126,9 @@ export default function LeftEyeDV({ route, navigation }: Props) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20 },
-  row: { flexDirection: "row", justifyContent: "center", marginVertical: 30 },
-  title: { fontSize: 22, fontWeight: "bold", textAlign: "center" },
-  subtitle: { textAlign: "center", marginTop: 8 },
+  row: { flexDirection: 'row', justifyContent: 'center', marginVertical: 30 },
+  title: { fontSize: 22, fontWeight: 'bold', textAlign: 'center' },
+  subtitle: { textAlign: 'center', marginTop: 8 },
   btn: { marginTop: 20 },
-  btnWrong: { marginTop: 10, backgroundColor: "red" },
+  btnWrong: { marginTop: 10, backgroundColor: 'red' },
 });

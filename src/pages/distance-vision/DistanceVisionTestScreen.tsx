@@ -34,7 +34,7 @@ export default function DistanceVisionTestScreen({ navigation }: Props) {
         </Button>
 
         {selectedTest && (
-          <>
+          <View>
             <Button
               mode="contained"
               style={styles.btn}
@@ -54,11 +54,10 @@ export default function DistanceVisionTestScreen({ navigation }: Props) {
             >
               Left Eye Test
             </Button>
-          </>
+          </View>
         )}
       </Card>
 
-      {/* ---------- INSTRUCTIONS POPUP ---------- */}
       <Portal>
         <Dialog visible={showGuide} onDismiss={() => setShowGuide(false)}>
           <Dialog.Title>Read Before Starting</Dialog.Title>
