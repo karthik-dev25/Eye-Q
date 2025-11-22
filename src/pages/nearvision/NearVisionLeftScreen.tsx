@@ -22,12 +22,12 @@ const TOTAL_SCORE = 6;
 
 // Correct mm → px conversion for near-vision
 const NV_FONT_SIZES: any = {
-  1: 80,  // N36
-  2: 54,  // N24
-  3: 40,  // N18
-  4: 26,  // N12
-  5: 22,  // N10
-  6: 14,  // N6
+  1: 80, // N36
+  2: 54, // N24
+  3: 40, // N18
+  4: 26, // N12
+  5: 22, // N10
+  6: 14, // N6
 };
 const SyllablePools: Record<string, string[]> = {
   Tamil: [
@@ -160,33 +160,34 @@ export default function NearVisionLeftScreen({ navigation, route }: Props) {
       setAnswerEnglish('');
       setNonEnglishBuffer([]);
     } else {
-      let lastAns = ans === expected ? score +1 : score;
+      let lastAns = ans === expected ? score + 1 : score;
+      setScore(s => s + 1)
       await finishTest(lastAns);
     }
   };
 
-  const finishTest = async (testScore:number) => {
+  const finishTest = async (testScore: number) => {
     let resultMessage = '';
 
     if (testScore === 6) {
       resultMessage =
-        "✔️ Normal Near Vision (N6)\n\n" +
-        "Advice: Your near vision is within normal limits.\n" +
-        "Eye Care Note: Visit an eye care professional once a year.\n";
+        '✔️ Normal Near Vision (N6)\n\n' +
+        'Advice: Your near vision is within normal limits.\n' +
+        'Eye Care Note: Visit an eye care professional once a year.\n';
     } else if (testScore >= 4) {
       resultMessage =
-        "⚠️ Reduced Near Vision (N10–N12)\n\n" +
-        "Advice: You may have difficulty with reading or near work.\n" +
-        "Eye Care Note: A detailed eye examination is recommended.\n";
+        '⚠️ Reduced Near Vision (N10–N12)\n\n' +
+        'Advice: You may have difficulty with reading or near work.\n' +
+        'Eye Care Note: A detailed eye examination is recommended.\n';
     } else {
       resultMessage =
-        "❗ Severely Reduced Near Vision (N18+)\n\n" +
-        "Advice: Immediate near correction is likely needed.\n" +
-        "Eye Care Note: Consult an optometrist as soon as possible.\n";
+        '❗ Severely Reduced Near Vision (N18+)\n\n' +
+        'Advice: Immediate near correction is likely needed.\n' +
+        'Eye Care Note: Consult an optometrist as soon as possible.\n';
     }
 
     resultMessage +=
-      "This test is a screening tool. Visit an Eye Care Practitioner for a complete examination.";
+      'This test is a screening tool. Visit an Eye Care Practitioner for a complete examination.';
 
     setDialogText(resultMessage);
     setDialogVisible(true);
@@ -199,8 +200,9 @@ export default function NearVisionLeftScreen({ navigation, route }: Props) {
           testName: `Near Vision - Left Eye (${language})`,
           testTotalScore: TOTAL_SCORE.toString(),
           testScore: score.toString(),
-          remarkTitle: score === 6 ? 'Normal' : score >= 4 ? 'Reduced' : 'Severe',
-          remark:resultMessage,
+          remarkTitle:
+            score === 6 ? 'Normal' : score >= 4 ? 'Reduced' : 'Severe',
+          remark: resultMessage,
         });
       }
     } catch {}
@@ -218,7 +220,23 @@ export default function NearVisionLeftScreen({ navigation, route }: Props) {
 
         {/* Dynamic near-vision word */}
         <Card style={styles.card}>
-          <Text style={{ fontSize: NV_FONT_SIZES[current], fontWeight: 'bold', textAlign: 'center' }}>
+          <Text
+            style={{
+              fontSize: NV_FONT_SIZES[current],
+              fontWeight: 'bold',
+              textAlign: 'center',
+              fontFamily:
+                language === 'English'
+                  ? 'Tinos-Regular'
+                  : language === 'Tamil'
+                  ? 'NotoSansTamil'
+                  : language === 'Telugu'
+                  ? 'NotoSansTelugu'
+                  : language === 'Hindi'
+                  ? 'NotoSansDevanagari'
+                  : 'Tinos-Regular',
+            }}
+          >
             {showWord}
           </Text>
         </Card>
@@ -245,14 +263,23 @@ export default function NearVisionLeftScreen({ navigation, route }: Props) {
 
             <View style={styles.keypadRow}>
               {(SyllablePools[language] || []).map(s => (
-                <Button key={s} mode="contained" onPress={() => setNonEnglishBuffer(p => [...p, s])} style={styles.keyBtn}>
+                <Button
+                  key={s}
+                  mode="contained"
+                  onPress={() => setNonEnglishBuffer(p => [...p, s])}
+                  style={styles.keyBtn}
+                >
                   {s}
                 </Button>
               ))}
             </View>
 
             <View style={{ flexDirection: 'row', marginTop: 8 }}>
-              <Button mode="outlined" onPress={() => setNonEnglishBuffer(p => p.slice(0, -1))} style={{ marginRight: 8 }}>
+              <Button
+                mode="outlined"
+                onPress={() => setNonEnglishBuffer(p => p.slice(0, -1))}
+                style={{ marginRight: 8 }}
+              >
                 ⌫
               </Button>
               <Button mode="outlined" onPress={() => setNonEnglishBuffer([])}>
@@ -263,7 +290,11 @@ export default function NearVisionLeftScreen({ navigation, route }: Props) {
         )}
 
         <View style={{ flexDirection: 'row', marginTop: 20 }}>
-          <Button mode="contained" onPress={checkAndNext} style={{ flex: 1, marginRight: 8 }}>
+          <Button
+            mode="contained"
+            onPress={checkAndNext}
+            style={{ flex: 1, marginRight: 8 }}
+          >
             {current < MAX_QUESTIONS ? 'Submit & Next' : 'Finish'}
           </Button>
 

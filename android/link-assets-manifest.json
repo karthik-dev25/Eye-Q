@@ -1,0 +1,25 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/assets/fonts/NotoSansDevanagari.ttf",
+      "sha1": "49e1a2b0af8f60e601fbb3c3bbbf28d280f391df"
+    },
+    {
+      "path": "src/assets/fonts/NotoSansTamil.ttf",
+      "sha1": "db73e11da8efdccb07122893f91ece20f1d0fb6f"
+    },
+    {
+      "path": "src/assets/fonts/NotoSansTelugu.ttf",
+      "sha1": "dee3797e2c537b91ab3fb7a138325c7eaa320634"
+    },
+    {
+      "path": "src/assets/fonts/Sloan.otf",
+      "sha1": "acf617d4377896a0b92947fb8772df2da7c95478"
+    },
+    {
+      "path": "src/assets/fonts/Tinos-Regular.ttf",
+      "sha1": "7986131e326593c805a13f9b0087fa52ae5f9c39"
+    }
+  ]
+}

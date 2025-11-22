@@ -11,6 +11,11 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		C63EC0F202C241CB912B5E37 /* Sloan.otf in Resources */ = {isa = PBXBuildFile; fileRef = F1E5A43561204EC7A1CFFB8B /* Sloan.otf */; };
+		A07E33BBD6694FFEA28AA6D7 /* NotoSansDevanagari.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3FBDC30B85C3401088A21F7E /* NotoSansDevanagari.ttf */; };
+		0CBB6FF881E6425688A6DFD5 /* NotoSansTamil.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 00B6561F0CDB4523A6352441 /* NotoSansTamil.ttf */; };
+		91DD901B39D1470293F72141 /* NotoSansTelugu.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4BF04385866A4FB0A6BAF4C6 /* NotoSansTelugu.ttf */; };
+		A29BD822BCAF498395F658E0 /* Tinos-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D3A7340EED324FFFB2C16171 /* Tinos-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +29,11 @@
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = EyeQ/AppDelegate.swift; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = EyeQ/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		F1E5A43561204EC7A1CFFB8B /* Sloan.otf */ = {isa = PBXFileReference; name = "Sloan.otf"; path = "../src/assets/fonts/Sloan.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		3FBDC30B85C3401088A21F7E /* NotoSansDevanagari.ttf */ = {isa = PBXFileReference; name = "NotoSansDevanagari.ttf"; path = "../src/assets/fonts/NotoSansDevanagari.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		00B6561F0CDB4523A6352441 /* NotoSansTamil.ttf */ = {isa = PBXFileReference; name = "NotoSansTamil.ttf"; path = "../src/assets/fonts/NotoSansTamil.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		4BF04385866A4FB0A6BAF4C6 /* NotoSansTelugu.ttf */ = {isa = PBXFileReference; name = "NotoSansTelugu.ttf"; path = "../src/assets/fonts/NotoSansTelugu.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		D3A7340EED324FFFB2C16171 /* Tinos-Regular.ttf */ = {isa = PBXFileReference; name = "Tinos-Regular.ttf"; path = "../src/assets/fonts/Tinos-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +84,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				D964393B1FA2402BB446E617 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -96,6 +107,19 @@
 			);
 			path = Pods;
 			sourceTree = "<group>";
+		};
+		D964393B1FA2402BB446E617 /* Resources */ = {
+			isa = "PBXGroup";
+			children = (
+				F1E5A43561204EC7A1CFFB8B /* Sloan.otf */,
+				3FBDC30B85C3401088A21F7E /* NotoSansDevanagari.ttf */,
+				00B6561F0CDB4523A6352441 /* NotoSansTamil.ttf */,
+				4BF04385866A4FB0A6BAF4C6 /* NotoSansTelugu.ttf */,
+				D3A7340EED324FFFB2C16171 /* Tinos-Regular.ttf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+			path = "";
 		};
 /* End PBXGroup section */
 
@@ -159,6 +183,11 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				C63EC0F202C241CB912B5E37 /* Sloan.otf in Resources */,
+				A07E33BBD6694FFEA28AA6D7 /* NotoSansDevanagari.ttf in Resources */,
+				0CBB6FF881E6425688A6DFD5 /* NotoSansTamil.ttf in Resources */,
+				91DD901B39D1470293F72141 /* NotoSansTelugu.ttf in Resources */,
+				A29BD822BCAF498395F658E0 /* Tinos-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

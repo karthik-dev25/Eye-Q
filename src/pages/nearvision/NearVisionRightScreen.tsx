@@ -159,6 +159,7 @@ export default function NearVisionRightScreen({ navigation, route }: Props) {
       setNonEnglishBuffer([]);
     } else {
       let lastAns = ans === expected ? score +1 : score;
+      setScore(s => s + 1)
       await finishTest(lastAns);
     }
   };
