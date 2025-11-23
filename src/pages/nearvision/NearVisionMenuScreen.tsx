@@ -2,7 +2,7 @@
 // src/pages/nearvision/NearVisionMenuScreen.tsx
 import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
-import { Text, Button, Card } from "react-native-paper";
+import { Text, Button, Card, Dialog, Portal, Provider } from "react-native-paper";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../utility/navigation";
 
@@ -13,53 +13,83 @@ const languages = ["English", "Tamil", "Telugu", "Hindi"];
 export default function NearVisionMenuScreen({ navigation }: Props) {
   const [language, setLanguage] = useState<string | null>(null);
 
+  // 🔵 NEW — show guideline popup on screen load
+  const [showGuide, setShowGuide] = useState(true);
+
   const startTest = (side: "right" | "left") => {
     if (!language) return;
     const routeName = side === "right" ? "NearVisionRight" : "NearVisionLeft";
-    // Use replace so stack gets cleaned
     navigation.replace(routeName as any, { language });
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Near Vision Test</Text>
+    <Provider>
+      <View style={styles.container}>
+        <Text style={styles.title}>Near Vision Test</Text>
 
-      <Card style={styles.card}>
-        <Card.Content>
-          <Text>Select Language</Text>
-          <View style={styles.langRow}>
-            {languages.map((l) => (
-              <Button
-                key={l}
-                mode={language === l ? "contained" : "outlined"}
-                onPress={() => setLanguage(l)}
-                style={styles.langButton}
-              >
-                {l}
-              </Button>
-            ))}
-          </View>
+        <Card style={styles.card}>
+          <Card.Content>
+            <Text>Select Language</Text>
 
-          <Text style={{ marginTop: 12 }}>
-            {language ? `Selected: ${language}` : "Please select a language"}
-          </Text>
-        </Card.Content>
+            <View style={styles.langRow}>
+              {languages.map((l) => (
+                <Button
+                  key={l}
+                  mode={language === l ? "contained" : "outlined"}
+                  onPress={() => setLanguage(l)}
+                  style={styles.langButton}
+                >
+                  {l}
+                </Button>
+              ))}
+            </View>
 
-        <Card.Actions style={{ justifyContent: "center" }}>
-          <Button
-            mode="contained"
-            disabled={!language}
-            onPress={() => startTest("right")}
-            style={{ marginRight: 8 }}
-          >
-            Start Right Eye Test
-          </Button>
-          <Button mode="contained" disabled={!language} onPress={() => startTest("left")}>
-            Start Left Eye Test
-          </Button>
-        </Card.Actions>
-      </Card>
-    </View>
+            <Text style={{ marginTop: 12 }}>
+              {language ? `Selected: ${language}` : "Please select a language"}
+            </Text>
+          </Card.Content>
+
+          <Card.Actions style={{ justifyContent: "center" }}>
+            <Button
+              mode="contained"
+              disabled={!language}
+              onPress={() => startTest("right")}
+              style={{ marginRight: 8 }}
+            >
+              Start Right Eye Test
+            </Button>
+
+            <Button
+              mode="contained"
+              disabled={!language}
+              onPress={() => startTest("left")}
+            >
+              Start Left Eye Test
+            </Button>
+          </Card.Actions>
+        </Card>
+
+        {/* 🔵 NEW — Guideline Popup */}
+        <Portal>
+          <Dialog visible={showGuide} onDismiss={() => setShowGuide(false)}>
+            <Dialog.Title>Before You Start</Dialog.Title>
+            <Dialog.Content>
+              <Text style={{ fontSize: 16, lineHeight: 24 }}>
+                If you are using <Text style={{ fontWeight: "bold" }}>glasses</Text> or 
+                <Text style={{ fontWeight: "bold" }}> contact lenses</Text>, please wear them during this test.{"\n\n"}
+                This helps verify if your current prescription is correct.{"\n\n"}
+                Hold your mobile phone at a distance of{" "}
+                <Text style={{ fontWeight: "bold" }}>40 cm</Text> from your eyes.
+              </Text>
+            </Dialog.Content>
+
+            <Dialog.Actions>
+              <Button onPress={() => setShowGuide(false)}>OK</Button>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
+      </View>
+    </Provider>
   );
 }
 
