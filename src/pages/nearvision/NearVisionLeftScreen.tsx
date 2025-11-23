@@ -20,74 +20,20 @@ type Props = NativeStackScreenProps<RootStackParamList, 'NearVisionLeft'>;
 const MAX_QUESTIONS = 6;
 const TOTAL_SCORE = 6;
 
-// Correct mm → px conversion for near-vision
+// MM → PX converted values (better accuracy for mobile screens)
 const NV_FONT_SIZES: any = {
-  1: 80, // N36
-  2: 54, // N24
-  3: 40, // N18
-  4: 26, // N12
-  5: 22, // N10
-  6: 14, // N6
+  1: 80,
+  2: 54,
+  3: 40,
+  4: 26,
+  5: 22,
+  6: 14,
 };
+
 const SyllablePools: Record<string, string[]> = {
-  Tamil: [
-    'ப',
-    'ந',
-    'ர',
-    'ன',
-    'ந்',
-    'பூ',
-    'நா',
-    'அ',
-    'நி',
-    'ஆ',
-    'த்',
-    'ம',
-    'ர்',
-    'ல்',
-    'ஹ்',
-    'க்',
-    'பு',
-    'ா',
-    'ஜா',
-  ],
-  Hindi: [
-    'भा',
-    'आ',
-    'ने',
-    'पू',
-    'जा',
-    'र',
-    'त',
-    'ह',
-    'ना',
-    'म',
-    'द',
-    'अ',
-    'नं',
-    'ता',
-    'जी',
-    'ग',
-    'पुर',
-  ],
-  Telugu: [
-    'భా',
-    'ఆ',
-    'న',
-    'పూ',
-    'జ',
-    'అ',
-    'ంద్',
-    'గ',
-    'హ్మ',
-    'ద్',
-    'నే',
-    'తా',
-    'జీ',
-    'రత్',
-    'నా',
-    'పూర్',
-  ],
+  Tamil: ['ப','ந','ர','ன','ந்','பூ','நா','அ','நி','ஆ','த்','ம','ர்','ல்','ஹ்','க்','பு','ா','ஜா'],
+  Hindi: ['भा','आ','ने','पू','जा','र','त','ह','ना','म','द','अ','नं','ता','जी','ग','पुर'],
+  Telugu: ['భా','ఆ','న','పూ','జ','అ','ంద్','గ','హ్మ','ద్','నే','తా','జీ','రత్','నా','పూర్'],
 };
 
 const CorrectAnswers: Record<string, Record<number, string>> = {
@@ -132,8 +78,12 @@ export default function NearVisionLeftScreen({ navigation, route }: Props) {
   const [answerEnglish, setAnswerEnglish] = useState('');
   const [nonEnglishBuffer, setNonEnglishBuffer] = useState<string[]>([]);
   const [score, setScore] = useState(0);
+
   const [dialogVisible, setDialogVisible] = useState(false);
   const [dialogText, setDialogText] = useState('');
+
+  // NEW: Popup Guideline
+  const [showGuide, setShowGuide] = useState(true);
 
   const showWord = CorrectAnswers[language]?.[current] || '';
 
@@ -161,7 +111,6 @@ export default function NearVisionLeftScreen({ navigation, route }: Props) {
       setNonEnglishBuffer([]);
     } else {
       let lastAns = ans === expected ? score + 1 : score;
-      setScore(s => s + 1)
       await finishTest(lastAns);
     }
   };
@@ -187,7 +136,7 @@ export default function NearVisionLeftScreen({ navigation, route }: Props) {
     }
 
     resultMessage +=
-      'This test is a screening tool. Visit an Eye Care Practitioner for a complete examination.';
+      '\nThis test is a screening tool. Visit an Eye Care Practitioner for a full examination.';
 
     setDialogText(resultMessage);
     setDialogVisible(true);
@@ -199,9 +148,8 @@ export default function NearVisionLeftScreen({ navigation, route }: Props) {
           userId,
           testName: `Near Vision - Left Eye (${language})`,
           testTotalScore: TOTAL_SCORE.toString(),
-          testScore: score.toString(),
-          remarkTitle:
-            score === 6 ? 'Normal' : score >= 4 ? 'Reduced' : 'Severe',
+          testScore: testScore.toString(),
+          remarkTitle: testScore === 6 ? 'Normal' : testScore >= 4 ? 'Reduced' : 'Severe',
           remark: resultMessage,
         });
       }
@@ -218,23 +166,13 @@ export default function NearVisionLeftScreen({ navigation, route }: Props) {
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.title}>Near Vision — Left Eye ({language})</Text>
 
-        {/* Dynamic near-vision word */}
+        {/* Dynamic word */}
         <Card style={styles.card}>
           <Text
             style={{
               fontSize: NV_FONT_SIZES[current],
               fontWeight: 'bold',
               textAlign: 'center',
-              fontFamily:
-                language === 'English'
-                  ? 'Tinos-Regular'
-                  : language === 'Tamil'
-                  ? 'NotoSansTamil'
-                  : language === 'Telugu'
-                  ? 'NotoSansTelugu'
-                  : language === 'Hindi'
-                  ? 'NotoSansDevanagari'
-                  : 'Tinos-Regular',
             }}
           >
             {showWord}
@@ -312,6 +250,27 @@ export default function NearVisionLeftScreen({ navigation, route }: Props) {
           </Button>
         </View>
 
+        {/* -------- Popup Guideline -------- */}
+        <Portal>
+          <Dialog visible={showGuide} onDismiss={() => setShowGuide(false)}>
+            <Dialog.Title>Before You Start</Dialog.Title>
+            <Dialog.Content>
+              <Text style={{ fontSize: 16, lineHeight: 22 }}>
+                Let’s check your <Text style={{ fontWeight: 'bold' }}>Left Eye vision</Text>.
+                {'\n\n'}• Cover your <Text style={{ fontWeight: 'bold' }}>Right eye</Text> with your hand
+                without pressing your eyelid tightly.
+                {'\n\n'}• If you are wearing glasses, cover your eye{' '}
+                <Text style={{ fontWeight: 'bold' }}>on top of the glasses</Text>.
+              </Text>
+            </Dialog.Content>
+
+            <Dialog.Actions>
+              <Button onPress={() => setShowGuide(false)}>OK</Button>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
+
+        {/* -------- Result Dialog -------- */}
         <Portal>
           <Dialog visible={dialogVisible} onDismiss={onDialogOk}>
             <Dialog.Title>Result</Dialog.Title>

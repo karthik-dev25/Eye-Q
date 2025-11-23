@@ -35,7 +35,7 @@ export default function DVTestTypeSelect({ route, navigation }: Props) {
         Numbers
       </Button>
 
-      <Button
+      {/* <Button
         mode="contained"
         style={styles.btn}
         onPress={() => {
@@ -44,7 +44,7 @@ export default function DVTestTypeSelect({ route, navigation }: Props) {
         }}
       >
         Tumbling E
-      </Button>
+      </Button> */}
     </View>
   );
 }
