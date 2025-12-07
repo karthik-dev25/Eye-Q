@@ -1,8 +1,9 @@
-/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable dot-notation */
-// src/pages/amsler/RightEyeAmslerScreen.tsx
-import React, { useEffect, useState } from "react";
-import { View, StyleSheet, ScrollView } from "react-native";
+/* eslint-disable react-native/no-inline-styles */
+/* RightEyeAmslerScreen.tsx */
+import React, { useEffect, useMemo, useState } from "react";
+import { View, StyleSheet, ScrollView, PixelRatio, Dimensions } from "react-native";
 import {
   Text,
   RadioButton,
@@ -16,7 +17,6 @@ import {
 } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import Slider from "@react-native-community/slider";
 import Svg, { Line, Rect, Circle } from "react-native-svg";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../utility/navigation";
@@ -38,19 +38,9 @@ export default function RightEyeAmslerScreen({ navigation }: Props) {
   const [q5, setQ5] = useState<string | null>(null);
   const [q6, setQ6] = useState<string | null>(null);
 
-  // calibration & grid
-  const [step, setStep] = useState<"calibration" | "amsler">("calibration");
-  const [lineWidthPx, setLineWidthPx] = useState<number>(200); // px representing 5 cm
-  const [oneCmInPx, setOneCmInPx] = useState<number | null>(null);
-
   const [dialogVisible, setDialogVisible] = useState(false);
   const [resultText, setResultText] = useState("");
   const [resultTitle, setResultTitle] = useState("");
-
-  // grid constants
-  const LINE_COUNT = 21; // 21 lines -> 20 cells across
-  const GRID_SIZE = oneCmInPx ? oneCmInPx * 10 : 0; // 10 cm grid
-  const CELL_SIZE = oneCmInPx ? oneCmInPx * 0.5 : 0; // 0.5 cm cell
 
   useEffect(() => {
     setTimeout(() => {
@@ -58,7 +48,7 @@ export default function RightEyeAmslerScreen({ navigation }: Props) {
       setResultTitle("Instructions");
       setResultText(
         "1. Cover your left eye and focus on the center dot.\n" +
-          "2. Keep the phone at arm's length (~30-40 cm).\n" +
+          "2. Hold the phone at ~30–40 cm from your eye.\n" +
           "3. Only focus on the black dot in the center.\n" +
           "4. Answer the questions below."
       );
@@ -85,12 +75,6 @@ export default function RightEyeAmslerScreen({ navigation }: Props) {
     });
   };
 
-  const confirmCalibration = () => {
-    const oneCm = lineWidthPx / 5; // slider width corresponds to 5 cm
-    setOneCmInPx(oneCm);
-    setStep("amsler");
-  };
-
   const calculatePointsAndSave = async (moveToLeftAfter = true) => {
     let points = 0;
     if (q1 === "Yes") points += 1;
@@ -101,16 +85,25 @@ export default function RightEyeAmslerScreen({ navigation }: Props) {
     if (q6 === "No") points += 1;
 
     const remark = points === 6 ? "excellent" : "requires attention";
+    const remarkMessage =  `You scored ${points}/6.\n\n${
+        remark === "excellent"
+          ? "Your grid looks normal."
+          : "Some changes were detected — please consult an eye specialist."
+      }`
 
-    try {
+    setResultTitle("Test Results");
+    setResultText(remarkMessage);
+    setDialogVisible(true);
+     try {
       const userId = await AsyncStorage.getItem("user_id");
       if (userId) {
         await axios.post(`${API_URL}/testscore`, {
           userId,
           testName: "AmslerGrid-Right",
-          testTotalScore: 6,
+          testTotalScore: "6",
           testScore: points,
-          remark,
+          remarkTitle:remark,
+          remark:resultText,
         });
       } else {
         console.warn("No user_id in AsyncStorage; skipping API save.");
@@ -118,16 +111,6 @@ export default function RightEyeAmslerScreen({ navigation }: Props) {
     } catch (err: any) {
       console.log("Error saving right-eye amsler:", err?.message ?? err);
     }
-
-    setResultTitle("Test Results");
-    setResultText(
-      `You scored ${points}/6.\n\n${
-        remark === "excellent"
-          ? "Your grid looks normal."
-          : "Some changes were detected — please consult an eye specialist."
-      }`
-    );
-    setDialogVisible(true);
     (onDialogDismiss as any).nextRoute = moveToLeftAfter ? "LeftEyeAmsler" : "AmslerGridTest";
   };
 
@@ -138,161 +121,176 @@ export default function RightEyeAmslerScreen({ navigation }: Props) {
     (onDialogDismiss as any).nextRoute = null;
   };
 
+  // ---------- Fixed metrics in MILLIMETERS ----------
+  // cell size = 5 mm
+  const CELL_MM = 5; // mm
+  const CELLS_PER_SIDE = 20; // 20 cells -> 21 lines
+  const GRID_MM = CELL_MM * CELLS_PER_SIDE; // 100 mm = 10 cm
+
+  // convert mm to pixels using device DPI
+  const { width: screenW } = Dimensions.get("window");
+  const devicePixelRatio = PixelRatio.get(); // e.g., 3
+  const approxDpi = devicePixelRatio * 160; // baseline mdpi = 160
+  const mmToPx = (mm: number) => (approxDpi / 25.4) * mm; // floating px
+
+  const GRID_PX = useMemo(() => Math.round(mmToPx(GRID_MM)), [devicePixelRatio]);
+  const CELL_PX = useMemo(() => mmToPx(CELL_MM), [devicePixelRatio]); // float for accurate placement
+  const DOT_RADIUS_PX = useMemo(() => Math.max(1, Math.round(mmToPx(1.5))), [devicePixelRatio]); // ~1.5mm dot
+
+  // stroke width and half-stroke to avoid clipping
+  const strokeW = useMemo(() => Math.max(0.5, mmToPx(0.15)), [devicePixelRatio]); // ~0.15 mm stroke
+  const halfStroke = strokeW / 2;
+
+  // compute a scale so the grid fits available width (with some padding)
+  const maxAvailableWidth = Math.max(200, screenW - 32);
+  const fitScale = GRID_PX > maxAvailableWidth ? maxAvailableWidth / GRID_PX : 1;
+
+  const LINES_COUNT = CELLS_PER_SIDE + 1; // 21
+
   const renderSvgGrid = () => {
-    if (!oneCmInPx) return null;
-    const size = GRID_SIZE;
-    const cell = CELL_SIZE;
-    const lines = Array.from({ length: LINE_COUNT });
-    const dotRadius = Math.max(1, oneCmInPx * 0.15);
-    const center = size / 2;
+    const size = GRID_PX;
+    const cell = CELL_PX;
+    const lines = Array.from({ length: LINES_COUNT });
+    // expand viewBox to include stroke so outermost strokes are visible
+    const vbWidth = size + strokeW;
+    const vbHeight = size + strokeW;
 
     return (
-      <Svg width={size} height={size}>
-        <Rect x={0} y={0} width={size} height={size} fill="white" />
+      <Svg
+        width={Math.round(vbWidth * fitScale)}
+        height={Math.round(vbHeight * fitScale)}
+        viewBox={`0 0 ${vbWidth} ${vbHeight}`}
+        preserveAspectRatio="xMidYMid meet"
+      >
+        <Rect x={0} y={0} width={vbWidth} height={vbHeight} fill="white" />
         {lines.map((_, i) => {
-          const pos = i * cell;
+          const pos = i * cell + halfStroke; // offset by half stroke
           return (
             <React.Fragment key={i}>
-              <Line x1={pos} y1={0} x2={pos} y2={size} stroke="black" strokeWidth={1} />
-              <Line x1={0} y1={pos} x2={size} y2={pos} stroke="black" strokeWidth={1} />
+              <Line
+                x1={pos}
+                y1={halfStroke}
+                x2={pos}
+                y2={size + halfStroke}
+                stroke="black"
+                strokeWidth={strokeW}
+              />
+              <Line
+                x1={halfStroke}
+                y1={pos}
+                x2={size + halfStroke}
+                y2={pos}
+                stroke="black"
+                strokeWidth={strokeW}
+              />
             </React.Fragment>
           );
         })}
-        <Circle cx={center} cy={center} r={dotRadius} fill="black" />
+        <Circle cx={size / 2 + halfStroke} cy={size / 2 + halfStroke} r={DOT_RADIUS_PX} fill="black" />
       </Svg>
     );
   };
 
   return (
     <Provider>
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView contentContainerStyle={styles.container} horizontal={false}>
         <View style={styles.topBar}>
           <Title>Right Eye Amsler</Title>
           <View style={{ width: 64 }} />
         </View>
 
-        {/* CALIBRATION */}
-        {step === "calibration" && (
-          <>
-            <Text style={{ fontSize: 18, textAlign: "center", marginBottom: 12 }}>
-              Adjust the line to exactly 5 cm using a physical ruler
-            </Text>
+        <Text style={{ marginBottom: 8, textAlign: "center" }}>
+          Hold phone at 30–40 cm • Cover your left eye • Look at the central dot
+        </Text>
 
-            <View style={{ alignItems: "center", marginVertical: 24 }}>
-              <View style={{ width: lineWidthPx, height: 4, backgroundColor: "black" }} />
+        <View style={{ alignItems: "center", paddingVertical: 12 }}>{renderSvgGrid()}</View>
+
+        <Button mode="outlined" onPress={() => {}} style={{ marginBottom: 12 }}>
+          Grid: 20×20 cells · cell = 5 mm
+        </Button>
+
+        <View style={styles.questionBlock}>
+          <Text style={styles.qTitle}>1. Can you see the center dot clearly?</Text>
+          <RadioButton.Group onValueChange={(v) => setQ1(v)} value={q1 ?? ""}>
+            <View style={styles.radioRow}>
+              <RadioButton.Item label="Yes" value="Yes" />
+              <RadioButton.Item label="No" value="No" />
             </View>
+          </RadioButton.Group>
+        </View>
 
-            <Slider
-              style={{ width: "100%" }}
-              minimumValue={100}
-              maximumValue={800}
-              value={lineWidthPx}
-              onValueChange={(value) => setLineWidthPx(value)}
-            />
-
-            <Button mode="contained" onPress={confirmCalibration} style={{ marginTop: 20 }}>
-              Confirm & Show Amsler Grid
-            </Button>
-          </>
-        )}
-
-        {/* AMSLER GRID + QUESTIONS */}
-        {step === "amsler" && (
-          <>
-            <Text style={{ marginBottom: 8, textAlign: "center" }}>
-              Hold phone at 30–40 cm • Cover your left eye • Look at the central dot
-            </Text>
-
-            <View style={{ alignSelf: "center", marginVertical: 12 }}>{renderSvgGrid()}</View>
-
-            <Button mode="outlined" onPress={() => setStep("calibration")} style={{ marginBottom: 12 }}>
-              Re-calibrate
-            </Button>
-
-            <View style={styles.questionBlock}>
-              <Text style={styles.qTitle}>1. Can you see the center dot clearly?</Text>
-              <RadioButton.Group onValueChange={(v) => setQ1(v)} value={q1 ?? ""}>
-                <View style={styles.radioRow}>
-                  <RadioButton.Item label="Yes" value="Yes" />
-                  <RadioButton.Item label="No" value="No" />
-                </View>
-              </RadioButton.Group>
+        <View style={styles.questionBlock}>
+          <Text style={styles.qTitle}>
+            2. While focusing on the center dot, can you see all four corners and edges?
+          </Text>
+          <RadioButton.Group onValueChange={(v) => setQ2(v)} value={q2 ?? ""}>
+            <View style={styles.radioRow}>
+              <RadioButton.Item label="Yes" value="Yes" />
+              <RadioButton.Item label="No" value="No" />
             </View>
+          </RadioButton.Group>
+        </View>
 
-            <View style={styles.questionBlock}>
-              <Text style={styles.qTitle}>
-                2. While focusing on the center dot, can you see all four corners and edges?
-              </Text>
-              <RadioButton.Group onValueChange={(v) => setQ2(v)} value={q2 ?? ""}>
-                <View style={styles.radioRow}>
-                  <RadioButton.Item label="Yes" value="Yes" />
-                  <RadioButton.Item label="No" value="No" />
-                </View>
-              </RadioButton.Group>
-            </View>
-
-            <View style={styles.questionBlock}>
-              <Text style={styles.qTitle}>
-                3. Are all the lines straight, or do any appear wavy, curved, or distorted?
-              </Text>
-              <View style={styles.checkboxColumn}>
-                {["Straight", "Wavy", "Curved", "Distorted"].map((opt) => (
-                  <View key={opt} style={styles.checkboxRow}>
-                    <Checkbox status={q3[opt] ? "checked" : "unchecked"} onPress={() => toggleQ3(opt)} />
-                    <Text style={{ marginLeft: 8 }}>{opt}</Text>
-                  </View>
-                ))}
+        <View style={styles.questionBlock}>
+          <Text style={styles.qTitle}>
+            3. Are all the lines straight, or do any appear wavy, curved, or distorted?
+          </Text>
+          <View style={styles.checkboxColumn}>
+            {["Straight", "Wavy", "Curved", "Distorted"].map((opt) => (
+              <View key={opt} style={styles.checkboxRow}>
+                <Checkbox status={q3[opt] ? "checked" : "unchecked"} onPress={() => toggleQ3(opt)} />
+                <Text style={{ marginLeft: 8 }}>{opt}</Text>
               </View>
-            </View>
+            ))}
+          </View>
+        </View>
 
-            <View style={styles.questionBlock}>
-              <Text style={styles.qTitle}>4. Is there any area where the lines are missing or appear blurry?</Text>
-              <RadioButton.Group onValueChange={(v) => setQ4(v)} value={q4 ?? ""}>
-                <View style={styles.radioRow}>
-                  <RadioButton.Item label="Yes" value="Yes" />
-                  <RadioButton.Item label="No" value="No" />
-                </View>
-              </RadioButton.Group>
+        <View style={styles.questionBlock}>
+          <Text style={styles.qTitle}>4. Is there any area where the lines are missing or appear blurry?</Text>
+          <RadioButton.Group onValueChange={(v) => setQ4(v)} value={q4 ?? ""}>
+            <View style={styles.radioRow}>
+              <RadioButton.Item label="Yes" value="Yes" />
+              <RadioButton.Item label="No" value="No" />
             </View>
+          </RadioButton.Group>
+        </View>
 
-            <View style={styles.questionBlock}>
-              <Text style={styles.qTitle}>5. Does any part of the grid look darker or faded compared to the rest?</Text>
-              <RadioButton.Group onValueChange={(v) => setQ5(v)} value={q5 ?? ""}>
-                <View style={styles.radioRow}>
-                  <RadioButton.Item label="Yes" value="Yes" />
-                  <RadioButton.Item label="No" value="No" />
-                </View>
-              </RadioButton.Group>
+        <View style={styles.questionBlock}>
+          <Text style={styles.qTitle}>5. Does any part of the grid look darker or faded compared to the rest?</Text>
+          <RadioButton.Group onValueChange={(v) => setQ5(v)} value={q5 ?? ""}>
+            <View style={styles.radioRow}>
+              <RadioButton.Item label="Yes" value="Yes" />
+              <RadioButton.Item label="No" value="No" />
             </View>
+          </RadioButton.Group>
+        </View>
 
-            <View style={styles.questionBlock}>
-              <Text style={styles.qTitle}>6. Is the size or shape of any area on the grid different?</Text>
-              <RadioButton.Group onValueChange={(v) => setQ6(v)} value={q6 ?? ""}>
-                <View style={styles.radioRow}>
-                  <RadioButton.Item label="Yes" value="Yes" />
-                  <RadioButton.Item label="No" value="No" />
-                </View>
-              </RadioButton.Group>
+        <View style={styles.questionBlock}>
+          <Text style={styles.qTitle}>6. Is the size or shape of any area on the grid different?</Text>
+          <RadioButton.Group onValueChange={(v) => setQ6(v)} value={q6 ?? ""}>
+            <View style={styles.radioRow}>
+              <RadioButton.Item label="Yes" value="Yes" />
+              <RadioButton.Item label="No" value="No" />
             </View>
+          </RadioButton.Group>
+        </View>
 
-            <Button mode="contained" style={styles.submitBtn} onPress={() => calculatePointsAndSave(true)}>
-              Submit Answers
-            </Button>
-          </>
-        )}
+        <Button mode="contained" style={styles.submitBtn} onPress={() => calculatePointsAndSave(true)}>
+          Submit Answers
+        </Button>
+
+        <Portal>
+          <Dialog visible={dialogVisible} onDismiss={onDialogDismiss}>
+            <Dialog.Title>{resultTitle}</Dialog.Title>
+            <Dialog.Content>
+              <Paragraph>{resultText}</Paragraph>
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button onPress={onDialogDismiss}>OK</Button>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
       </ScrollView>
-
-      <Portal>
-        <Dialog visible={dialogVisible} onDismiss={onDialogDismiss}>
-          <Dialog.Title>{resultTitle}</Dialog.Title>
-          <Dialog.Content>
-            <Paragraph>{resultText}</Paragraph>
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button onPress={onDialogDismiss}>OK</Button>
-          </Dialog.Actions>
-        </Dialog>
-      </Portal>
     </Provider>
   );
 }
